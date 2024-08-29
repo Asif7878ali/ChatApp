@@ -3,7 +3,19 @@ const mongoose = require('mongoose')
 const userSchema = new mongoose.Schema({
     username : {
       type : String,
-      required : [true ,'Username is Required']
+      required : false
+    },
+    firstname: {
+      type: String,
+      required: [true ,'Name is Required']
+    },
+    lastname: {
+      type: String,
+      required: [true ,'Sirname is Required']
+    },
+    image: {
+      type: String,
+      required: false
     },
     email :  {
       type : String,
@@ -12,6 +24,10 @@ const userSchema = new mongoose.Schema({
     password :  {
       type : String,
       required : [true ,'Password is Required']
+    },
+    profileSetup :{
+        type : Boolean,
+        default : false
     }
   })  
 

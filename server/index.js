@@ -17,7 +17,7 @@ server.use(cookieParser());
 server.use(express.json());
 
 //Routes
-server.use('api/auth', authRoute);
+server.use('/api/auth', authRoute);
 
 //start server and connect database
 connection().then(()=>{

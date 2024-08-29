@@ -3,14 +3,15 @@ const User = require('../models/schemas/UserSchema.js');
 const signup = async (req,res) => {
     console.log('client', req.body);
   try {
-    const { username, email, password } = req.body;
-    const userExist = await User.findOne({email : email}).exec();
+    const { Email, Firstname, Lastname, Password } = req.body;
+    // findone method me first paramemter database wali entry hogi second wali req se aaye body hogi
+    const userExist = await User.findOne({email : Email}).exec();
 
     if(userExist){
         return res.status(400).json({msg:'User is Already Exist'});
     } else {
         const user = new User({
-            username, email, password
+            Email, Firstname, Lastname, Password
         });
         const document = await user.save();
         console.log(document);

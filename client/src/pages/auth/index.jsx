@@ -2,25 +2,83 @@ import { useState } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs"
 import {Input} from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
+import { toast } from "sonner"
+import axios from "axios";
+
 const Auth = () => {
-       const [username , setUsername] = useState('');
+      
+       const[firstname, setFirstname] = useState('');
+       const[lastname, setLastname] = useState('');
        const [email , setEmail] = useState('');
        const [password , setPassword] = useState('');
 
-       const Logfuc = () =>{
+       function validationsignup() {
+        switch (true) {
+          case !firstname.length:
+            toast.error('Firstname is required');
+            return false;
+
+          case !lastname.length:
+              toast.error('Lastname is required');
+              return false;  
+      
+          case !email.length:
+            toast.error('Email is required');
+            return false;
+      
+          case !/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email):
+            toast.error('Please enter a valid email');
+            return false;
+      
+          case !password.length:
+            toast.error('Password is required');
+            return false;
+      
+          default:
+            return true;
+        }
+      }
+      
+       const Logfuc = (event) =>{
+        event.preventDefault();
             const data = {
-               Username: username,
+               Email: email,
                Password: password
             }
-          console.log(data);  
+          console.log(data); 
+             // Reset form fields
+          setEmail('');
+          setPassword('');
+       // api call
       }
-       const Signfuc = () =>{
-        const data = {
-          Username: username,
+
+       const Signfuc = async (event) =>{
+        event.preventDefault();
+        if(!validationsignup()){
+            return
+        }
+        const formdata = {
+          Firstname: firstname,
+          Lastname: lastname,  
           Email: email,
           Password: password
        }
-         console.log(data);  
+         console.log(formdata);  
+         //api call
+         try {
+          const server = import.meta.env.VITE_SERVER_URL;
+          const Url = `${server}/api/auth/signup`;
+          const result = await axios.post(Url, formdata);
+          console.log(result);
+           // Reset form fields
+           setFirstname('');
+           setLastname('');
+           setEmail('');
+           setPassword('');
+         } catch (error) {
+          console.warn("Sign in errror:", error);
+          toast.error('Account not Created');
+         }
        }
   return (
     <div className='h-[100vh] w-[100vw] flex items-center justify-center'>
@@ -39,18 +97,29 @@ const Auth = () => {
                   <TabsTrigger className='data-[state=active]:bg-transparent text-black text-opacity-90 border-b-2 rounded-none w-full data-[state=active]:text-black data-[state=active]:font-semibold data-[state=active]:border-b-purple-500 p-3 transition-all duration-300' value='signup'>Signup</TabsTrigger>
                 </TabsList>
                 <TabsContent className='flex flex-col gap-5 mt-10' value='login'>
-                  <Input placeholder='Username' type='text' value={username} onChange={(event) => setUsername(event.target.value)} className='rounded-full p-6'/>
+                   {/* Email */}
+                   <form onSubmit={Logfuc} className='flex flex-col gap-5'>
+                  <Input placeholder='Enter E-mail' type='email' value={email} onChange={(event) => setEmail(event.target.value)} className='rounded-full p-6' autoComplete=''/>
+                  {/* Password */}
                   <Input placeholder='*******' type='password' value={password}onChange={(event) => setPassword(event.target.value)}  className='rounded-full p-6' autoComplete=''/>
-                  <Button className='rounded-full p-5 bg-black text-white font-bold hover:bg-slate-950' onClick={Logfuc}>Login</Button>
+                  <Button className='rounded-full p-5 bg-black text-white font-bold hover:bg-slate-950' type='submit'>Login</Button>
+                  </form>
                 </TabsContent>
                
                 <TabsContent className='flex flex-col gap-5' value='signup'>
-                    <Input placeholder='Username' type='text' value={username} onChange={(event) => setUsername(event.target.value)} className='rounded-full p-6'/>
+                        {/* Firstname */}
+                  <form onSubmit={Signfuc} className='flex flex-col gap-5'>     
+                    <Input placeholder='FirstName' type='text' value={firstname} onChange={(event) => setFirstname(event.target.value)} className='rounded-full p-6' autoComplete=''/>
+                         {/* Lastname */}
+                    <Input placeholder='LastName' type='text' value={lastname} onChange={(event) => setLastname(event.target.value)} className='rounded-full p-6' autoComplete=''/>
+                         {/* Email */}
                     <Input placeholder='E-mail' type='email' value={email}onChange={(event) => setEmail(event.target.value)}
-                     className='rounded-full p-6'/>
+                     className='rounded-full p-6' autoComplete=''/>
+                         {/* Password */}
                     <Input placeholder='Password' type='password' value={password}onChange={(event) => setPassword(event.target.value)}
-                      className='rounded-full p-6'/>
-                    <Button className='rounded-full p-5 bg-blue-600 text-white font-bold hover:bg-blue-700' onClick={Signfuc}>Signin</Button>
+                      className='rounded-full p-6' autoComplete=''/>
+                    <Button className='rounded-full p-5 bg-blue-600 text-white font-bold hover:bg-blue-700' type='submit'>Signin</Button>
+                 </form>
                 </TabsContent>
               </Tabs>
             </div>
