@@ -54,4 +54,30 @@ const login = async (req,res) => {
   }
 }
 
-module.exports = {signup, login};
+const getuserinfo = async (req,res) => {
+  try {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email }).exec();
+     if (!user) {
+         console.log('User with given E-mail was not Found');
+        return res.status(400).json({ msg: 'User with given E-mail was not Found' });
+      }
+      if (user.password !== password) {
+        console.log('Invalid Credentials')
+        return res.status(401).json({ msg: 'Invalid Credentials' });
+      }
+      //create Token
+      const jwttoken = JWT.sign({id:user._id}, process.env.JWTSECRETKEY, {expiresIn : '1h'});
+      console.log('Login Successful');
+      return res.status(200).json({ user :{
+        msg : 'Login Succesfull',
+        token : jwttoken,
+        profileSetup: user.profileSetup
+      }});
+  } catch (error) {
+      console.warn('Error is', error);
+      return res.status(500).json({ msg: 'Internal Server Error' });
+  }
+}
+
+module.exports = {signup, login, getuserinfo};

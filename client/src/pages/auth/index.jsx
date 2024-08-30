@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Cookies from 'js-cookie'
 
 const Auth = () => {
       
@@ -76,10 +77,12 @@ const Auth = () => {
             const Url = `${server}/api/auth/login`;
             const result = await axios.post(Url, data);
             console.log(result);
-            let msg = result.data.user.msg;
-            let profilesetup = result.data.user.profileSetup;
+            let{msg} = result.data.user;
+            let {profileSetup} = result.data.user;
+            const {token} = result.data.user;
+            Cookies.set('token',token,{expires:1});
             toast.success(msg);
-            if(profilesetup === true){
+            if(profileSetup === true){
               navigate('/chat');
             } else{
               navigate('/profile');
