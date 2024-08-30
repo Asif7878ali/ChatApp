@@ -11,7 +11,7 @@ const Auth = () => {
        const[lastname, setLastname] = useState('');
        const [email , setEmail] = useState('');
        const [password , setPassword] = useState('');
-
+       //validation
        function validationsignup() {
         switch (true) {
           case !firstname.length:
@@ -38,18 +38,51 @@ const Auth = () => {
             return true;
         }
       }
+
+      function validationlogin() {
+        switch (true) {     
+          case !email.length:
+            toast.error('Email is required');
+            return false;
       
-       const Logfuc = (event) =>{
+          case !/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email):
+            toast.error('Please enter a valid email');
+            return false;
+      
+          case !password.length:
+            toast.error('Password is required');
+            return false;
+      
+          default:
+            return true;
+        }
+      }
+           //Handle Auth Request
+       const Logfuc = async (event) =>{
         event.preventDefault();
+        if(!validationlogin()){
+          return
+          }
             const data = {
-               Email: email,
-               Password: password
+               email: email,
+               password: password
             }
           console.log(data); 
+          try {
+            const server = import.meta.env.VITE_SERVER_URL;
+            const Url = `${server}/api/auth/login`;
+            const result = await axios.post(Url, data);
+            console.log(result);
+            let msg = result.data.msg;
+            toast.success(msg);
+           } catch (error) {
+            let msg = error.response.data.msg;
+            console.warn("Sign in errror:", error);
+            toast.error(msg);
+           }
              // Reset form fields
           setEmail('');
           setPassword('');
-       // api call
       }
 
        const Signfuc = async (event) =>{
@@ -58,10 +91,10 @@ const Auth = () => {
             return
         }
         const formdata = {
-          Firstname: firstname,
-          Lastname: lastname,  
-          Email: email,
-          Password: password
+          firstname: firstname,
+          lastname: lastname,  
+          email: email,
+          password: password
        }
          console.log(formdata);  
          //api call
@@ -70,15 +103,18 @@ const Auth = () => {
           const Url = `${server}/api/auth/signup`;
           const result = await axios.post(Url, formdata);
           console.log(result);
-           // Reset form fields
-           setFirstname('');
-           setLastname('');
-           setEmail('');
-           setPassword('');
+          let msg = result.data.msg;
+          toast.success(msg);
          } catch (error) {
+          let msg = error.response.data.msg;
           console.warn("Sign in errror:", error);
-          toast.error('Account not Created');
+          toast.error(msg);
          }
+           // Reset form fields
+            setFirstname('');
+            setLastname('');
+            setEmail('');
+            setPassword('');
        }
   return (
     <div className='h-[100vh] w-[100vw] flex items-center justify-center'>
@@ -91,7 +127,7 @@ const Auth = () => {
                <p className='font-medium text-center'>fill the details to get started with the Chat-App</p>
             </div>
             <div className='flex items-center justify-center w-full'>
-              <Tabs className='w-3/4'>
+              <Tabs className='w-3/4' defaultValue='login'>
                 <TabsList className='bg-transparent rounded-none w-full'>
                   <TabsTrigger className='data-[state=active]:bg-transparent text-black text-opacity-90 border-b-2 rounded-none w-full data-[state=active]:text-black data-[state=active]:font-semibold data-[state=active]:border-b-purple-500 p-3 transition-all duration-300' value='login'>Login</TabsTrigger>
                   <TabsTrigger className='data-[state=active]:bg-transparent text-black text-opacity-90 border-b-2 rounded-none w-full data-[state=active]:text-black data-[state=active]:font-semibold data-[state=active]:border-b-purple-500 p-3 transition-all duration-300' value='signup'>Signup</TabsTrigger>

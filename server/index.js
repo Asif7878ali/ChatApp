@@ -13,12 +13,16 @@ server.use(cors({
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
   credentials : true
 }));
+// console.log(process.env.ORIGIN);
 server.use(cookieParser());
 server.use(express.json());
 
 //Routes
 server.use('/api/auth', authRoute);
 
+server.get('/',(req, res )=>{
+    return res.send('hello');
+})
 //start server and connect database
 connection().then(()=>{
   server.listen(port, () => {
