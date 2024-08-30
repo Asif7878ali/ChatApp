@@ -1,4 +1,7 @@
+require('dotenv').config()
 const User = require('../models/schemas/UserSchema.js');
+const JWT = require('jsonwebtoken')
+
 
 const signup = async (req,res) => {
   try {
@@ -15,7 +18,7 @@ const signup = async (req,res) => {
         });
         const document = await user.save();
         console.log(document);
-        return  res.status(200).json({ msg: 'User Registration successful' });
+        return  res.status(201).json({ msg: 'User Registration successful' });
     }
 
   } catch (error) {
@@ -28,7 +31,6 @@ const signup = async (req,res) => {
 const login = async (req,res) => {
   try {
     const { email, password } = req.body;
-    // findone method me first paramemter database wali entry hogi second wali req se aaye body hogi
     const user = await User.findOne({ email }).exec();
      if (!user) {
          console.log('User with given E-mail was not Found');
@@ -38,8 +40,14 @@ const login = async (req,res) => {
         console.log('Invalid Credentials')
         return res.status(401).json({ msg: 'Invalid Credentials' });
       }
+      //create Token
+      const jwttoken = JWT.sign({id:user._id}, process.env.JWTSECRETKEY, {expiresIn : '1h'});
       console.log('Login Successful');
-      return res.status(200).json({ msg: 'Login Successful' });
+      return res.status(200).json({ user :{
+        msg : 'Login Succesfull',
+        token : jwttoken,
+        profileSetup: user.profileSetup
+      }});
   } catch (error) {
       console.warn('Error is', error);
       return res.status(500).json({ msg: 'Internal Server Error' });

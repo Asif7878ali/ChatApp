@@ -4,6 +4,7 @@ import {Input} from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Auth = () => {
       
@@ -11,6 +12,8 @@ const Auth = () => {
        const[lastname, setLastname] = useState('');
        const [email , setEmail] = useState('');
        const [password , setPassword] = useState('');
+
+       const navigate = useNavigate();
        //validation
        function validationsignup() {
         switch (true) {
@@ -73,8 +76,14 @@ const Auth = () => {
             const Url = `${server}/api/auth/login`;
             const result = await axios.post(Url, data);
             console.log(result);
-            let msg = result.data.msg;
+            let msg = result.data.user.msg;
+            let profilesetup = result.data.user.profileSetup;
             toast.success(msg);
+            if(profilesetup === true){
+              navigate('/chat');
+            } else{
+              navigate('/profile');
+            }
            } catch (error) {
             let msg = error.response.data.msg;
             console.warn("Sign in errror:", error);
@@ -105,6 +114,7 @@ const Auth = () => {
           console.log(result);
           let msg = result.data.msg;
           toast.success(msg);
+          navigate("/profile");
          } catch (error) {
           let msg = error.response.data.msg;
           console.warn("Sign in errror:", error);
