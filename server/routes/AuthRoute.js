@@ -5,6 +5,7 @@ const verifytoken = require('../middlewares/AuthMiddleware.js');
 const authRoute = express.Router();
 authRoute.post('/signup', signup);
 authRoute.post('/login', login);
-authRoute.get('/verify/login/user', verifytoken, getuserinfo);
+//first is middleware 
+authRoute.post('/verify/user', verifytoken, getuserinfo);
 
 module.exports = authRoute;

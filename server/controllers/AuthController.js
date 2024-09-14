@@ -11,14 +11,14 @@ const signup = async (req,res) => {
 
     if(userExist){
          console.log('User is Already Exist')
-        return res.status(400).json({msg:'User is Already Exist'});
+         return res.status(400).json({msg:'User is Already Exist'});
     } else {
         const user = new User({
             email, firstname, lastname, password
         });
-        const document = await user.save();
-        console.log(document);
-        return  res.status(201).json({ msg: 'User Registration successful' });
+        await user.save();
+        console.log('User Register Succesfull');
+        return  res.status(201).json({ msg: 'User Registration Successful' });
     }
 
   } catch (error) {
@@ -56,7 +56,8 @@ const login = async (req,res) => {
 
 const getuserinfo = async (req,res) => {
   try {
-   
+        console.log('hii');
+        return res.status(200).json({ msg: 'OK' });
   } catch (error) {
       console.warn('Error is', error);
       return res.status(500).json({ msg: 'Internal Server Error' });

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs"
-import {Input} from "@/components/ui/input"
+import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
 import axios from "axios";
@@ -9,8 +9,8 @@ import Cookies from 'js-cookie'
 
 const Auth = () => {
       
-       const[firstname, setFirstname] = useState('');
-       const[lastname, setLastname] = useState('');
+       const [firstname, setFirstname] = useState('');
+       const [lastname, setLastname] = useState('');
        const [email , setEmail] = useState('');
        const [password , setPassword] = useState('');
 
@@ -77,10 +77,10 @@ const Auth = () => {
             const Url = `${server}/api/auth/login`;
             const result = await axios.post(Url, data);
             console.log(result);
-            let{msg} = result.data.user;
-            let {profileSetup} = result.data.user;
-            const {token} = result.data.user;
-            Cookies.set('token',token,{expires:1});
+            let { msg } = result.data.user;
+            let { profileSetup } = result.data.user;
+            const { token } = result.data.user;
+            Cookies.set('token',token,{ expires:1 });
             toast.success(msg);
             if(profileSetup === true){
               navigate('/chat');

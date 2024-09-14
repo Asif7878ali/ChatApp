@@ -12,9 +12,9 @@ const Profile = () => {
 
   async function verifyUser(){
     const server = import.meta.env.VITE_SERVER_URL;
-    const Url = `${server}/api/auth/verify/login/user`;
+    const Url = `${server}/api/auth/verify/user`;
     try {
-       const result  = await axios.post(Url,{header});
+       const result  = await axios.post(Url,{ headers: header });
        console.log(result);
     } catch (error) {
       console.warn(error);
