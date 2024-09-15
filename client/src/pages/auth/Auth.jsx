@@ -1,11 +1,13 @@
-import { useState } from 'react'
-import { Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import { toast } from "sonner"
+import { useState } from 'react';
+import { Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import Cookies from 'js-cookie'
+import Cookies from 'js-cookie';
+import { useDispatch } from "react-redux";
+import { loginSucces } from '../../slices/AuthSlice.js';
 
 const Auth = () => {
       
@@ -15,6 +17,7 @@ const Auth = () => {
        const [password , setPassword] = useState('');
 
        const navigate = useNavigate();
+       const dispatch = useDispatch();
        //validation
        function validationsignup() {
         switch (true) {
@@ -71,12 +74,13 @@ const Auth = () => {
                email: email,
                password: password
             }
-          console.log(data); 
           try {
             const server = import.meta.env.VITE_SERVER_URL;
             const Url = `${server}/api/auth/login`;
             const result = await axios.post(Url, data);
             console.log(result);
+            const {user} = result.data;
+            dispatch(loginSucces(user));
             let { msg } = result.data.user;
             let { profileSetup } = result.data.user;
             const { token } = result.data.user;
