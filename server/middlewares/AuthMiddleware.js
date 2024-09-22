@@ -3,13 +3,19 @@ const JWT = require('jsonwebtoken');
 
 const verifytoken = (req, res, next)=>{
    try {
-      console.log(req.body.headers.Authorization);
-      const token = req.body.headers.Authorization.split(' ')[1];
+      const token = req.cookies.token;
       console.log(token);
-      const decoded = JWT.verify(token, process.env.JWTSECRETKEY);
-      console.log(decoded);
-      console.log(decoded.id);
-      next();
+      if(!token){
+         return res.status(400).json({ msg: 'You are not Authentication' });
+      }
+      JWT.verify(token, process.env.JWTSECRETKEY, async(error, payload)=>{
+         if(error){
+            return res.status(400).json({ msg: 'Token is not Valid' });
+         }
+         console.log(payload);
+         req.id = payload.id; // Token se user ID set ki
+         next();
+      });
    } catch (error) {
        console.log(error);
        res.status(401).json({ msg: 'Authentication failed' });

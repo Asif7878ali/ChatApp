@@ -6,7 +6,27 @@ import { useSelector } from 'react-redux';
 
 const App = () => {
      
-   const isAuthenticated = useSelector((state) => state?.auth?.isAuthticate);
+   const PrivateRoute = ({children}) =>{
+      const isAuthenticated = useSelector((state) => state?.auth?.isAuthticate);
+        if(isAuthenticated){
+            //  If authenticated, render the children
+            return children
+        } else{
+            // If not authenticated, redirect to auth
+            return  <Navigate to='/auth'/>
+        }
+   }
+
+   const AuthRoute = ({children}) =>{
+      const isAuthenticated = useSelector((state) => state?.auth?.isAuthticate);
+        if(!isAuthenticated){
+            // If not authenticated, render the children
+            return children
+        } else{
+           // If authenticated, redirect to chat
+           return  <Navigate to='/chat'/>
+        }
+   }
 
   return (
    <HashRouter>
@@ -14,19 +34,27 @@ const App = () => {
      <Route 
         path='/auth' 
         element={
-              <Auth/>
+             <AuthRoute>
+                 <Auth/>
+             </AuthRoute>             
          }/>
      <Route 
         path='/chat' 
         element={
-             <Chat/>
+             <PrivateRoute>
+                <Chat/>
+             </PrivateRoute>
+            
         }/>
      <Route 
         path='/profile' 
         element={
-            <Profile/>
+             <PrivateRoute>
+                 <Profile/>
+             </PrivateRoute>
+           
         }/>
-     <Route path='*' element={<Navigate to='/auth' />} />
+     <Route path='*' element={<Navigate to='/auth'/>} />
    </Routes>
  </HashRouter>
   )

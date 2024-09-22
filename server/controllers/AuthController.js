@@ -56,8 +56,21 @@ const login = async (req,res) => {
 
 const getuserinfo = async (req,res) => {
   try {
-        console.log('hii');
-        return res.status(200).json({ msg: 'OK' });
+        const userdatabaseid = req.id
+        console.log(userdatabaseid);
+        const user = await User.findById(userdatabaseid);
+        if(!user){
+          return res.status(400).json({ msg: 'User not Found' });
+        }
+        const {username, firstname, lastname, image, email, profileSetup} = user;
+        return res.status(200).json({ user:{
+          username,
+          firstname,
+          lastname,
+          image,
+          email,
+          profileSetup
+        } });
   } catch (error) {
       console.warn('Error is', error);
       return res.status(500).json({ msg: 'Internal Server Error' });
