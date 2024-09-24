@@ -77,4 +77,14 @@ const getuserinfo = async (req,res) => {
   }
 }
 
-module.exports = {signup, login, getuserinfo};
+const profileSetup = async (req,res) => {
+  try {
+        const userdatabaseid = req.id
+        console.log(userdatabaseid);
+  } catch (error) {
+      console.warn('Error is', error);
+      return res.status(500).json({ msg: 'Internal Server Error' });
+  }
+}
+
+module.exports = {signup, login, getuserinfo, profileSetup};
