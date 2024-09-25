@@ -62,14 +62,11 @@ const getuserinfo = async (req,res) => {
         if(!user){
           return res.status(400).json({ msg: 'User not Found' });
         }
-        const {username, firstname, lastname, image, email, profileSetup} = user;
+        const { firstname, lastname, email} = user;
         return res.status(200).json({ user:{
-          username,
           firstname,
           lastname,
-          image,
           email,
-          profileSetup
         } });
   } catch (error) {
       console.warn('Error is', error);
@@ -80,7 +77,11 @@ const getuserinfo = async (req,res) => {
 const profileSetup = async (req,res) => {
   try {
         const userdatabaseid = req.id
-        console.log(userdatabaseid);
+        const { username, profilePicture} = req.body;
+        if (!username || !profilePicture) {
+          return res.status(400).json({ msg: 'Username and Image are required' });
+        }
+         // Find user by ID and update the fields
   } catch (error) {
       console.warn('Error is', error);
       return res.status(500).json({ msg: 'Internal Server Error' });
