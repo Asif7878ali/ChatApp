@@ -1,43 +1,47 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { loginSucces } from '../../slices/AuthSlice.js';
+import { loginSucces } from "../../slices/AuthSlice.js";
 import { useNavigate } from "react-router-dom";
-import {toast} from 'sonner';
+import { toast } from "sonner";
 import axios from "axios";
+import ContactContainer from "./componet/contactContainer/ContactContainer.jsx";
+import EmptyChatContainer from "./componet/emptyChatContainer/EmptyChatContainer.jsx";
+import ChatContainer from "./componet/chatContainer/ChatContainer.jsx";
 
 const Chat = () => {
   const userinfo = useSelector((state) => state?.auth?.user);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  
+
   async function verifyUser() {
     const server = import.meta.env.VITE_SERVER_URL;
     const Url = `${server}/api/auth/verify/user`;
     try {
-      const result = await axios.post(Url, {}, {
-        withCredentials: true
-      });
+      const result = await axios.post(Url, {}, { withCredentials: true } );
       console.log(result);
-      const {user} = result.data;
+      const { user } = result.data;
       dispatch(loginSucces(user));
     } catch (error) {
       console.warn(error);
     }
   }
- 
+
   useEffect(() => {
     verifyUser();
     if (userinfo?.profileSetup === false) {
       console.log(userinfo.profileSetup);
-      toast('Please Setup Profile to Continue to Chat');
+      toast("Please Setup Profile to Continue to Chat");
       navigate("/profile");
     }
-  },[userinfo, navigate]);
+  }, [userinfo, navigate]);
 
-  return( 
-    
-        <div>Chat</div>
-);
+  return (
+    <div>
+      <ContactContainer />
+      <EmptyChatContainer />
+      <ChatContainer />
+    </div>
+  );
 };
 
 export default Chat;
