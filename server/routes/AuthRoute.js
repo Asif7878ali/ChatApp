@@ -1,12 +1,13 @@
 const express = require('express');
 const {signup, login, getuserinfo, profileSetup} = require('../controllers/AuthController.js');
 const verifytoken = require('../middlewares/AuthMiddleware.js');
+const uploadProfilePictureMulter = require('../middlewares/ProfilePictureMulter.js');
 
 const authRoute = express.Router();
 authRoute.post('/signup', signup);
 authRoute.post('/login', login);
 //first is middleware 
 authRoute.post('/verify/user', verifytoken, getuserinfo);
-authRoute.post('/profile/setup', verifytoken, profileSetup);
+authRoute.post('/profile/setup', verifytoken, uploadProfilePictureMulter, profileSetup);
 
 module.exports = authRoute;

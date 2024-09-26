@@ -77,11 +77,19 @@ const getuserinfo = async (req,res) => {
 const profileSetup = async (req,res) => {
   try {
         const userdatabaseid = req.id
-        const { username, profilePicture} = req.body;
-        if (!username || !profilePicture) {
+        const { username } = req.body;
+        if (!username || !req.file) {
           return res.status(400).json({ msg: 'Username and Image are required' });
         }
-         // Find user by ID and update the fields
+        // Profile picture path
+        const profilePicturePath = req.file.path;
+        console.log('Profileimage',profilePicturePath);
+        await User.findByIdAndUpdate(userdatabaseid, {
+          username: username,
+          image: profilePicturePath,
+          profileSetup: true
+        })
+        return res.status(200).json({ msg: 'Profile Setup successfully' });
   } catch (error) {
       console.warn('Error is', error);
       return res.status(500).json({ msg: 'Internal Server Error' });

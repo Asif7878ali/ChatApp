@@ -5,7 +5,7 @@ import { FaPlus } from "react-icons/fa";
 import { toast } from "sonner";
 
 const Profile = () => {
-  const [profilePicture, setProfilePicture] = useState(null); // store the file itself
+  const [profilePicture, setProfilePicture] = useState(null);
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
  
@@ -70,7 +70,9 @@ const Profile = () => {
         withCredentials: true
       });
       console.log(result);
-      toast.success('Profile updated successfully');
+      const {msg} = result.data;
+      toast.success(msg);
+      
     } catch (error) {
       console.log(error);
       toast.error('Failed to update profile');
@@ -108,37 +110,25 @@ const Profile = () => {
               <div className="grid max-w-2xl mx-auto mt-8">
                 <div className="flex flex-col items-center space-y-5 sm:flex-row sm:space-y-0">
                   {profilePicture ? (
-                    <img
-                      className="object-cover w-40 h-40 p-1 rounded-full ring-2 ring-black"
-                      src={URL.createObjectURL(profilePicture)} // show image preview
-                      alt="Profile"
-                    />
+                    <img className="object-cover w-40 h-40 p-1 rounded-full ring-2 ring-black"
+                         src={URL.createObjectURL(profilePicture)} alt="Profile"/>
                   ) : (
-                    <label
-                      htmlFor="image"
-                      className="flex justify-center items-center w-40 h-40 p-1 border border-black rounded-full ring-2 cursor-pointer"
-                    >
+                    <label htmlFor="image"
+                      className="flex justify-center items-center w-40 h-40 p-1 border border-black rounded-full ring-2 cursor-pointer">
                       <FaPlus size={30} className="text-black" />
-                      <input
-                        id="image"
-                        type="file"
-                        name="profile-picture"
-                        accept=".png, .jpg, .jpeg, .svg, .webp"
-                        onChange={handleImageChange}
-                        className="hidden"
-                      />
+                      <input id="image" type="file" name="profile-picture" 
+                             accept=".png, .jpg, .jpeg, .svg, .webp" 
+                             onChange={handleImageChange} className="hidden"/>
                     </label>
                   )}
                   <div className="flex flex-col space-y-5 sm:ml-8">
-                    <button
-                      type="button"
+                    <button type="button"
                       className={`py-3.5 px-7 text-base font-medium rounded-lg ${
                         profilePicture
                           ? "text-white bg-indigo-700 hover:bg-indigo-800 cursor-pointer"
                           : "text-gray-500 bg-gray-300 cursor-not-allowed"
                       }`}
-                      onClick={handleChangeImageClick}
-                    >
+                      onClick={handleChangeImageClick}>
                       Change picture
                     </button>
                   </div>
@@ -146,45 +136,24 @@ const Profile = () => {
 
                 <div className="items-center mt-8 sm:mt-14 text-[#202142]">
                   <div className="mb-2 sm:mb-6">
-                    <label htmlFor="email" className="block mb-2 text-sm font-medium">
-                      E-mail
-                    </label>
-                    <Input
-                      type="email"
-                      name="email"
-                      id="email"
-                      placeholder="E-mail"
-                      value={email}
-                      readOnly
-                      required
-                      className="border border-black rounded-lg block w-full p-2.5"
-                      title="You cannot change the E-mail Address during Profile Setup"
-                    />
+                    <label htmlFor="email" className="block mb-2 text-sm font-medium">E-mail</label>
+                    <Input type="email" name="email" id="email" placeholder="E-mail"
+                           value={email} readOnly required
+                           className="border border-black rounded-lg block w-full p-2.5"
+                           title="You cannot change the E-mail Address during Profile Setup"/>
                   </div>
 
                   <div className="mb-2 sm:mb-6">
-                    <label htmlFor="username" className="block mb-2 text-sm font-medium">
-                      Username
-                    </label>
-                    <Input
-                      type="text"
-                      name="username"
-                      id="username"
-                      placeholder="Username"
-                      value={username}
-                      required
-                      className="border border-black rounded-lg block w-full p-2.5"
-                      onChange={(event) => setUsername(event.target.value)}
-                    />
+                    <label htmlFor="username" className="block mb-2 text-sm font-medium">Username</label>
+                    <Input type="text" name="username" id="username"
+                           placeholder="Username" value={username} required
+                           className="border border-black rounded-lg block w-full p-2.5"
+                           onChange={(event) => setUsername(event.target.value)}/>
                   </div>
 
                   <div className="flex justify-end">
-                    <button
-                      type="submit"
-                      className="text-white bg-indigo-700 hover:bg-indigo-800 focus:ring-4 focus:outline-none focus:ring-indigo-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
-                    >
-                      Save Changes
-                    </button>
+                    <button type="submit"
+                      className="text-white bg-indigo-700 hover:bg-indigo-800 focus:ring-4 focus:outline-none focus:ring-indigo-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">Save Changes</button>
                   </div>
                 </div>
               </div>
