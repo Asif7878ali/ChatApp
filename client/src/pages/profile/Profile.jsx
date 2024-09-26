@@ -3,12 +3,17 @@ import axios from "axios";
 import { Input } from "@/components/ui/input";
 import { FaPlus } from "react-icons/fa";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const Profile = () => {
   const [profilePicture, setProfilePicture] = useState(null);
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
+
+  const userinfo = useSelector((state) => state?.auth?.user);
  
+  const navigate = useNavigate();
 
   async function verifyUser() {
     const server = import.meta.env.VITE_SERVER_URL;
@@ -72,7 +77,9 @@ const Profile = () => {
       console.log(result);
       const {msg} = result.data;
       toast.success(msg);
-      
+      setTimeout(()=>{
+        navigate('/chat');
+      },2000);
     } catch (error) {
       console.log(error);
       toast.error('Failed to update profile');
@@ -81,7 +88,11 @@ const Profile = () => {
 
   useEffect(() => {
     verifyUser();
-  }, []);
+    if (userinfo?.profileSetup === true) {
+      console.log(userinfo.profileSetup);
+      navigate("/chat");
+    }
+  }, [userinfo, navigate]);
 
   return (
     <div className="bg-white w-full flex flex-col gap-5 px-3 md:px-16 lg:px-28 md:flex-row text-[#161931]">
