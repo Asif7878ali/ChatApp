@@ -87,12 +87,12 @@ const Profile = () => {
   };
 
   useEffect(() => {
-    verifyUser();
     if (userinfo?.profileSetup === true) {
       console.log(userinfo.profileSetup);
       navigate("/chat");
     }
-  }, [userinfo, navigate]);
+    verifyUser();
+  }, []);
 
   return (
     <div className="bg-white w-full flex flex-col gap-5 px-3 md:px-16 lg:px-28 md:flex-row text-[#161931]">

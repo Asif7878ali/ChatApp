@@ -27,16 +27,16 @@ const Chat = () => {
   }
 
   useEffect(() => {
-    verifyUser();
     if (userinfo?.profileSetup === false) {
       console.log(userinfo.profileSetup);
       toast("Please Setup Profile to Continue to Chat");
       navigate("/profile");
     }
-  }, [userinfo, navigate]);
+    verifyUser();
+  }, []);
 
   return (
-    <div>
+    <div className="flex h-[100vh] overflow-hidden">
       <ContactContainer />
       <EmptyChatContainer />
       <ChatContainer />
