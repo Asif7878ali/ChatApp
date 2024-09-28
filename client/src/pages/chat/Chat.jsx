@@ -38,7 +38,7 @@ const Chat = () => {
   return (
     <div className="flex h-[100vh] overflow-hidden">
       <ContactContainer />
-      <EmptyChatContainer />
+      {/* <EmptyChatContainer /> */}
       <ChatContainer />
     </div>
   );
