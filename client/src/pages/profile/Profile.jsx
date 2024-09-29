@@ -10,6 +10,7 @@ const Profile = () => {
   const [profilePicture, setProfilePicture] = useState(null);
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
+  const [loading , setLoading] = useState(false);
 
   const userinfo = useSelector((state) => state?.auth?.user);
  
@@ -17,15 +18,18 @@ const Profile = () => {
 
   async function verifyUser() {
     const server = import.meta.env.VITE_SERVER_URL;
-    const Url = `${server}/api/auth/verify/user`;
+    const Url = `${server}/api/auth/user/verify`;
+    setLoading(true);
     try {
       const result = await axios.post(Url, {}, {
         withCredentials: true
       });
       const { email } = result.data.user;
       setEmail(email);
+      setLoading(false);
     } catch (error) {
       console.warn(error);
+      setLoading(false);
     }
   }
 
@@ -67,7 +71,8 @@ const Profile = () => {
     console.log(profiledata);
     try {
       const server = import.meta.env.VITE_SERVER_URL;
-      const Url = `${server}/api/auth/profile/setup`;
+      const Url = `${server}/api/auth/user/profile/setup`;
+      setLoading(true);
       const result = await axios.post(Url, profiledata, {
         headers: {
           'Content-Type': 'multipart/form-data'
@@ -77,12 +82,14 @@ const Profile = () => {
       console.log(result);
       const {msg} = result.data;
       toast.success(msg);
+      setLoading(false);
       setTimeout(()=>{
         navigate('/chat');
       },2000);
     } catch (error) {
       console.log(error);
       toast.error('Failed to update profile');
+      setLoading(false);
     }
   };
 

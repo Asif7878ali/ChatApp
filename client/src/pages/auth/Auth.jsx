@@ -15,6 +15,7 @@ const Auth = () => {
        const [lastname, setLastname] = useState('');
        const [email , setEmail] = useState('');
        const [password , setPassword] = useState('');
+       const [loading , setLoading] = useState(false);
 
        const navigate = useNavigate();
        const dispatch = useDispatch();
@@ -74,9 +75,10 @@ const Auth = () => {
                email: email,
                password: password
             }
+            setLoading(true);
           try {
             const server = import.meta.env.VITE_SERVER_URL;
-            const Url = `${server}/api/auth/login`;
+            const Url = `${server}/api/auth/user/login`;
             const result = await axios.post(Url, data);
             console.log(result);
             const {user} = result.data;
@@ -86,6 +88,7 @@ const Auth = () => {
             const { token } = result.data.user;
             Cookies.set('token',token,{ expires:1 });
             toast.success(msg);
+            setLoading(false);
             if(profileSetup === true){
               navigate('/chat');
             } else{
@@ -95,6 +98,7 @@ const Auth = () => {
             let msg = error.response.data.msg;
             console.warn("Sign in errror:", error);
             toast.error(msg);
+            setLoading(false);
            }
              // Reset form fields
           setEmail('');
@@ -113,19 +117,22 @@ const Auth = () => {
           password: password
        }
          console.log(formdata);  
+         setLoading(true);
          //api call
          try {
           const server = import.meta.env.VITE_SERVER_URL;
-          const Url = `${server}/api/auth/signup`;
+          const Url = `${server}/api/auth/user/signup`;
           const result = await axios.post(Url, formdata);
           console.log(result);
           let msg = result.data.msg;
           toast.success(msg);
+          setLoading(false);
           navigate("/profile");
          } catch (error) {
           let msg = error.response.data.msg;
           console.warn("Sign in errror:", error);
           toast.error(msg);
+          setLoading(false);
          }
            // Reset form fields
             setFirstname('');

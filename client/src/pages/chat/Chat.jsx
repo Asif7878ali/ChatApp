@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import {useState ,useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { loginSucces } from "../../slices/AuthSlice.js";
 import { useNavigate } from "react-router-dom";
@@ -9,6 +9,8 @@ import EmptyChatContainer from "./componet/emptyChatContainer/EmptyChatContainer
 import ChatContainer from "./componet/chatContainer/ChatContainer.jsx";
 
 const Chat = () => {
+
+  const [loading, setLoading] = useState(false);
   const userinfo = useSelector((state) => state?.auth?.user);
   const navigate = useNavigate();
   const dispatch = useDispatch();
