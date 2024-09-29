@@ -11,7 +11,7 @@ import { logout } from "../../../../../../slices/AuthSlice";
 
 const ProfileDisplay = () => {
 
-  const[loading , setLoading] = useState(false);
+  const [loading , setLoading] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
    

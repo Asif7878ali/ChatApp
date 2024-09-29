@@ -4,7 +4,11 @@ import { Input } from "@/components/ui/input";
 import { FaPlus } from "react-icons/fa";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter,      AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { logout } from "../../slices/AuthSlice.js";
+
+
 
 const Profile = () => {
   const [profilePicture, setProfilePicture] = useState(null);
@@ -12,6 +16,7 @@ const Profile = () => {
   const [email, setEmail] = useState('');
   const [loading , setLoading] = useState(false);
 
+  const dispatch = useDispatch();
   const userinfo = useSelector((state) => state?.auth?.user);
  
   const navigate = useNavigate();
@@ -93,6 +98,35 @@ const Profile = () => {
     }
   };
 
+  const handleLogout = async () => {
+    setLoading(true);
+    const server = import.meta.env.VITE_SERVER_URL;
+    const Url = `${server}/api/auth/user/logout`;
+    try {
+      const result = await axios.post(Url, {}, {
+        withCredentials: true
+      });
+      console.log(result)
+      let {status} = result.data;
+      let {msg} = result.data;
+      if (status == true) {
+        toast.success(msg);
+        dispatch(logout());
+        navigate('/auth');
+        setLoading(false);
+      } else {
+        console.error("Logout failed");
+        toast.error('Logout failed');
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      toast.error('Logoutfailed');
+      setLoading(false);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     if (userinfo?.profileSetup === true) {
       console.log(userinfo.profileSetup);
@@ -113,6 +147,30 @@ const Profile = () => {
           <span className="flex items-center px-3 py-2.5 font-semibold text-indigo-900 hover:border hover:rounded-full">
             Account Settings
           </span>
+          <AlertDialog>
+                <AlertDialogTrigger>
+                <span className="flex items-center px-3 py-2.5 font-semibold text-indigo-900 hover:border hover:rounded-full">
+                 Logout
+                </span>
+                </AlertDialogTrigger>
+                <AlertDialogContent className={`${loading && "blur-sm pointer-events-none"}`}>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>
+                      Are you sure you want to Log out?
+                    </AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Come Back Soon
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={handleLogout} disabled={loading}>
+                      {loading ? "Logging out..." : "Logout"}
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+
           <span className="flex items-center px-3 py-2.5 font-semibold text-red-600 hover:border hover:rounded-full">
             Delete Account
           </span>

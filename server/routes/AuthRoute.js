@@ -6,9 +6,8 @@ const uploadProfilePictureMulter = require('../middlewares/ProfilePictureMulter.
 const authRoute = express.Router();
 authRoute.post( '/user/signup', signup );
 authRoute.post( '/user/login', login );
-//first is middleware 
-authRoute.post( '/user/verify', verifytoken, getuserinfo );
-authRoute.post( '/user/profile/setup', verifytoken, uploadProfilePictureMulter, profileSetup );
+authRoute.post( '/user/verify', verifytoken, getuserinfo ); //first is middleware 
+authRoute.post( '/user/profile/setup', verifytoken, uploadProfilePictureMulter, profileSetup ); //first and second is middleware
 authRoute.post( '/user/logout', verifytoken, logout )
 
 module.exports = authRoute;
