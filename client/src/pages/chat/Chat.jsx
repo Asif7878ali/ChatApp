@@ -18,13 +18,16 @@ const Chat = () => {
   async function verifyUser() {
     const server = import.meta.env.VITE_SERVER_URL;
     const Url = `${server}/api/auth/verify/user`;
+    setLoading(true)
     try {
       const result = await axios.post(Url, {}, { withCredentials: true } );
       console.log(result);
       const { user } = result.data;
       dispatch(loginSucces(user));
+      setLoading(false);
     } catch (error) {
       console.warn(error);
+      setLoading(false);
     }
   }
 
@@ -40,8 +43,8 @@ const Chat = () => {
   return (
     <div className="flex h-[100vh] overflow-hidden">
       <ContactContainer />
-      {/* <EmptyChatContainer /> */}
-      <ChatContainer />
+      <EmptyChatContainer />
+      {/* <ChatContainer /> */}
     </div>
   );
 };
