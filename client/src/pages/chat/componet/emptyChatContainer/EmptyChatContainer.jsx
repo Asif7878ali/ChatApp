@@ -1,54 +1,93 @@
-import React from "react";
+import { useState } from "react";
 import chatlogo from "../../../../assets/chatwave.png";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import axios from 'axios'; 
 
 const EmptyChatContainer = () => {
+   
+     const [search, setSearch] = useState('');
+     const [results, setResults] = useState([]);
+     const [loading, setLoading] = useState(false);
+     console.log(results);
+
+     async function handleSearch(term){
+        if (term.trim().length > 0) {
+              try {
+                setLoading(true)
+                const server = import.meta.env.VITE_SERVER_URL;
+                const Url = `${server}/api/auth/search/contact`;
+                const responce = await axios.post(Url, { search : term});
+                console.log(responce);
+                let {contacts} = responce.data;
+                setResults(contacts || []);
+                setLoading(false);
+              } catch (error) {
+                console.error('Search error:', error);
+                setLoading(false);
+              }
+        } else {
+           setResults([]);
+        }
+     }
+
   return (
     <div className="flex-1 md:flex flex-col justify-center items-center hidden">
       <img className="h-56 w-72" src={chatlogo} alt="our logo" />
       <div className="text-opacity-80 flex flex-col items-center mt-5 lg:text-2xl text-center">
         <h1>Your messages</h1>
         <p className="pb-2 text-sm">Send a message to start a chat.</p>
-
-        <Dialog>
-          <DialogTrigger>
-            <Button
-              className="px-7 py-2 bg-blue-400 hover:bg-blue-500 text-white"
-              type="submit"
-            >
+         <Dialog>
+           <DialogTrigger>
+             <Button className="px-7 py-2 bg-blue-400 hover:bg-blue-500 text-white" type="submit">
               Send Message
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="border-none w-[600px] h-[400px] flex flex-col  rounded-lg">
-            <DialogHeader className="">
-              <DialogTitle className="text-center font-semibold text-lg">
-                New Message
-              </DialogTitle>
-            </DialogHeader>
-            <span className="border-b border-gray-600"></span>
-            <DialogDescription className="flex items-center space-x-4">
-              <p>To:</p>
-              <input
-                className="w-full focus:outline-none focus:border-transparent"
-                type="text"
-                placeholder="Search..."/>
-            </DialogDescription>
-            <span className="border-b border-gray-600"></span>
-            <div className="flex-1 p-4 text-gray-400">No account found.</div>
-            <div className="text-center">
-              <Button
-                className="bg-blue-500 hover:bg-blue-600 text-white px-28"
-                type="submit" >
-                Chat
-              </Button>
+             </Button>
+           </DialogTrigger>
+           <DialogContent className="border-none w-[600px] h-[400px] flex flex-col  rounded-lg">
+              <DialogHeader>
+                <DialogTitle className="text-center font-semibold text-lg">New Message</DialogTitle>
+              </DialogHeader>
+             <span className="border-b border-gray-600"></span>
+             <DialogDescription className="flex items-center space-x-4">
+                <p>To:</p>
+                <input className="w-full focus:outline-none focus:border-transparent"
+                       type="text" placeholder="Search..." onChange={event =>{ 
+                        setSearch(event.target.value) 
+                        handleSearch(event.target.value)
+                        }}/>
+             </DialogDescription>
+             <span className="border-b border-gray-600"></span>
+             {loading ? (
+              <div className="flex-1 p-4 text-gray-400">Searching...</div>
+            ) : search.length > 0 && results.length === 0 ? (
+              <div className="flex-1 p-4 text-gray-400">No account found.</div>
+            ) : (
+              <ScrollArea className="h-[250px]">
+              <div className="flex flex-col gap-5">
+                {results.map((contact) => (
+                   <div key={contact._id} className="flex gap-3 items-center cursor-pointer">
+                     <div className="w-12 h-12 relative">
+                        <Avatar className='h-12 w-12 rounded-full overflow-hidden'>
+                          { contact.image ? ( 
+                              <AvatarImage src={`${import.meta.env.VITE_SERVER_URL}/${contact.image}`} alt='Profile' className='object-cover w-full h-full' />
+                            ) : (
+                              <div className="w-12 h-12 rounded-full text-center bg-gray-200 text-blue-600"><h3>
+                                 No Image
+                              </h3>
+                              </div>
+                          ) }
+                        </Avatar>
+                     </div>
+                       <h1> {contact.firstname} <span> {contact.lastname}</span></h1> 
+                  </div>              
+                ))}
+              </div>
+              </ScrollArea>
+            )}           
+             <div className="text-center">
+                <Button className="bg-blue-500 hover:bg-blue-600 text-white px-28" type="submit">Chat</Button>
             </div>
           </DialogContent>
         </Dialog>
