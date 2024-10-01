@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const server = express()
+
 const cookieParser = require('cookie-parser');
 const port = process.env.PORT || 2000
 const connection = require('./models/Connection.js');
@@ -15,7 +16,8 @@ server.use(cors({
 }));
 // console.log(process.env.ORIGIN);
 server.use(cookieParser());
-server.use(express.json());
+server.use(express.json({ limit: '100mb' }));
+server.use(express.urlencoded({ limit: '100mb', extended: true }));
 
 //Routes
 server.use('/api/auth', authRoute);

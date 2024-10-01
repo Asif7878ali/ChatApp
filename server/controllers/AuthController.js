@@ -81,15 +81,15 @@ const profileSetup = async (req,res) => {
   try {
         const userdatabaseid = req.id
         const { username } = req.body;
-        if (!username || !req.file) {
+       
+        const profilePictureUrl = req.body.profilePictureUrl; //Comes from Cloudinary
+        if (!username || !profilePictureUrl) {
           return res.status(406).json({ msg: 'Username and Image are required', status: false });
         }
-        // Profile picture path
-        const profilePicturePath = req.file.path;
-        console.log('Profileimage',profilePicturePath);
+       
         await User.findByIdAndUpdate(userdatabaseid, {
           username: username,
-          image: profilePicturePath,
+          image: profilePictureUrl,
           profileSetup: true
         })
         return res.status(201).json({ msg: 'Profile Setup successfully', status: true });

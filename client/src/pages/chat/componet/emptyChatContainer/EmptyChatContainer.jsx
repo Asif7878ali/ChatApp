@@ -13,6 +13,9 @@ const EmptyChatContainer = () => {
      const [loading, setLoading] = useState(false);
      console.log(results);
 
+     let serverimage = import.meta.env.VITE_SERVER_URL;
+     console.log(serverimage);
+
      async function handleSearch(term){
         if (term.trim().length > 0) {
               try {
@@ -71,7 +74,7 @@ const EmptyChatContainer = () => {
                      <div className="w-12 h-12 relative">
                         <Avatar className='h-12 w-12 rounded-full overflow-hidden'>
                           { contact.image ? ( 
-                              <AvatarImage src={`${import.meta.env.VITE_SERVER_URL}/${contact.image}`} alt='Profile' className='object-cover w-full h-full' />
+                              <img src={contact.image} alt='Profile' className='object-cover w-full h-full'/>
                             ) : (
                               <div className="w-12 h-12 rounded-full text-center bg-gray-200 text-blue-600"><h3>
                                  No Image

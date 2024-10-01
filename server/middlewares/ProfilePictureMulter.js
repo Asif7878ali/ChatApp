@@ -1,43 +1,32 @@
-const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
+const cloudinary = require('cloudinary').v2;
 
-const uploadDirectory = 'uploads/profile_pictures';
-if (!fs.existsSync(uploadDirectory)) {
-  fs.mkdirSync(uploadDirectory, { recursive: true });
+// Cloudinary configuration
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+const uploadProfilePicture = async (req, res, next) =>{
+  console.log(req.body);
+  const { profilePicture } = req.body;
+  if (!profilePicture) {
+    return res.status(400).json({ msg: 'No profile picture provided', status: false });
+  }
+    try {
+       // Upload image to Cloudinary
+       const result = await cloudinary.uploader.upload(profilePicture, {
+         folder: 'profilePicture',
+         resource_type: 'image', // Ensures only image uploads
+        });
+        // Attach the image URL from Cloudinary to the request object
+           req.body.profilePictureUrl = result.secure_url;
+           console.log( req.body.profilePictureUrl);
+           next();
+    } catch (error) {
+      console.error('Cloudinary upload error:', error);
+      return res.status(500).json({ msg: 'Image upload failed', status: false });
+    }
 }
-
-// Multer storage configuration
-const storage = multer.diskStorage({
-    //file destination name
-    destination: (req, file, cb) => {
-      cb(null, 'uploads/profile_pictures'); // Folder to save images
-    },
-    //file name
-    filename: (req, file, cb) => {
-      cb(null, `${Date.now()}-${file.originalname}`);
-    }
-  });
-
-  // Multer file filter for image types
-const fileFilter = (req, file, cb) => {
-    const fileTypes = /jpeg|jpg|png|webp|svg/;
-    const extname = fileTypes.test(path.extname(file.originalname).toLowerCase());
-    const mimeType = fileTypes.test(file.mimetype);
-    
-    if (mimeType && extname) {
-      return cb(null, true);
-    } else {
-      cb(new Error('Only images are allowed'));
-    }
-  };
-
-  // Setting multer with storage, file size limit, and file filter
-const uploadProfilePictureMulter = multer({
-    storage: storage,
-    limits: { fileSize: 1024 * 1024 * 5 }, // Limit to 5MB
-    fileFilter: fileFilter
-  }).single('profilePicture'); 
   
-
-module.exports = uploadProfilePictureMulter;
+module.exports = uploadProfilePicture;

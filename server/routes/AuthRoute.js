@@ -1,14 +1,14 @@
 const express = require('express');
 const {signup, login, getuserinfo, profileSetup, logout} = require('../controllers/AuthController.js');
 const verifytoken = require('../middlewares/AuthMiddleware.js');
-const uploadProfilePictureMulter = require('../middlewares/ProfilePictureMulter.js');
+const uploadProfilePicture = require('../middlewares/ProfilePictureMulter.js');
 const { serachContacts } = require('../controllers/ContactController.js');
 
 const authRoute = express.Router();
 authRoute.post( '/user/signup', signup );
 authRoute.post( '/user/login', login );
 authRoute.post( '/user/verify', verifytoken, getuserinfo ); //first is middleware 
-authRoute.post( '/user/profile/setup', verifytoken, uploadProfilePictureMulter, profileSetup ); //first and second is middleware
+authRoute.post( '/user/profile/setup',verifytoken, uploadProfilePicture, profileSetup ); //first and second is middleware
 authRoute.post( '/user/logout', verifytoken, logout );
 authRoute.post( '/search/contact', serachContacts);
 

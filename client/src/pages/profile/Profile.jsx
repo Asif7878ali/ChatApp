@@ -42,9 +42,14 @@ const Profile = () => {
   // Handle image change
   const handleImageChange = (event) => {
     const file = event.target.files[0];
-    if (file) {
-      setProfilePicture(file);
+    let reader = new FileReader();
+    reader.onloadend = function(){
+        let {result} = reader;
+        
+      setProfilePicture(result)
     }
+    reader.readAsDataURL(file);
+    
   };
 
   const handleChangeImageClick = () => {
@@ -79,9 +84,6 @@ const Profile = () => {
       const Url = `${server}/api/auth/user/profile/setup`;
       setLoading(true);
       const result = await axios.post(Url, profiledata, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }, 
         withCredentials: true
       });
       console.log(result);
@@ -187,7 +189,7 @@ const Profile = () => {
                 <div className="flex flex-col items-center space-y-5 sm:flex-row sm:space-y-0">
                   {profilePicture ? (
                     <img className="object-cover w-40 h-40 p-1 rounded-full ring-2 ring-black"
-                         src={URL.createObjectURL(profilePicture)} alt="Profile"/>
+                         src={profilePicture} alt="Profile"/>
                   ) : (
                     <label htmlFor="image"
                       className="flex justify-center items-center w-40 h-40 p-1 border border-black rounded-full ring-2 cursor-pointer">
