@@ -1,17 +1,33 @@
-import React from 'react'
+import React from "react";
+import { useSelector } from "react-redux";
 
 const ChatHeader = () => {
+  const chatUserinfo = useSelector((state) => state?.chat?.chatUser);
+
   return (
-    <div className='h-[10vh] border-b-2 border-black flex items-center justify-center px-20'>
-      <div className='flex gap-5 items-center'>
-         <div className=' flex gap-3 items-center justify-center'>
-            <div className='flex items-center justify-center gap-5'>
-
-            </div>
+    <div className="h-[10vh] border-b-2 border-black flex ">
+      <div className="flex items-center">
+        {!chatUserinfo ? ( <div className="flex px-10 items-center space-x-5">
+          <img
+            src="https://wingandaprayer.live/wp-content/uploads/2018/07/no-image-available.jpg"
+            alt="User Profile"
+            className="w-12 h-12 rounded-full"
+          />
+          <h2>chatUserinfo...</h2>
+        </div>) :(
+           <div className="flex px-10 items-center space-x-5">
+           <img
+             src={chatUserinfo?.image}
+             alt="User Profile"
+             className="w-12 h-12 rounded-full"
+           />
+           <h2>{chatUserinfo?.username}</h2>
          </div>
-      </div>Diana
+        )}
+       
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default ChatHeader
+export default ChatHeader;

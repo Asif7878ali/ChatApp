@@ -12,12 +12,13 @@ const Chat = () => {
 
   const [loading, setLoading] = useState(false);
   const userinfo = useSelector((state) => state?.auth?.user);
+  const selectChatUser = useSelector((state) => state?.chat?.chatUser);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   async function verifyUser() {
     const server = import.meta.env.VITE_SERVER_URL;
-    const Url = `${server}/api/auth/verify/user`;
+    const Url = `${server}/api/auth/user/verify`;
     setLoading(true)
     try {
       const result = await axios.post(Url, {}, { withCredentials: true } );
@@ -43,8 +44,13 @@ const Chat = () => {
   return (
     <div className="flex h-[100vh] overflow-hidden">
       <ContactContainer />
-      <EmptyChatContainer />
-      {/* <ChatContainer /> */}
+      {selectChatUser === null ? (
+          <EmptyChatContainer />
+       ) : (
+          <ChatContainer />
+       ) }
+     
+    
     </div>
   );
 };
