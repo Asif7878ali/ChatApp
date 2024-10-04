@@ -60,7 +60,7 @@ const ProfileDisplay = () => {
         )}
 
         <div className="pt-1 sm:pt-0 sm:ml-auto flex space-x-3">
-          <button>
+          <div>
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger>
@@ -71,8 +71,8 @@ const ProfileDisplay = () => {
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
-          </button>
-          <button className="text-red-600">
+          </div>
+          <div className="text-red-600">
             <AlertDialog>
               <AlertDialogTrigger>
                 <TooltipProvider>
@@ -103,7 +103,7 @@ const ProfileDisplay = () => {
                 </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>
-          </button>
+          </div>
         </div>
       </div>
     </div>
