@@ -2,6 +2,8 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const server = express()
+const setupSocket = require('./Socket.js')
+const http = require('http');
 
 const cookieParser = require('cookie-parser');
 const port = process.env.PORT || 2000
@@ -27,7 +29,12 @@ server.get('/',(req, res )=>{
 })
 //start server and connect database
 connection().then(()=>{
-  server.listen(port, () => {
-    console.log(`Server is listen on PORT No. ${port}`)
-  })
+   // Create an HTTP server from the express server
+   const httpServer = http.createServer(server);
+ // Start the HTTP server
+ httpServer.listen(port, () => {
+  console.log(`Server is listening on PORT No. ${port}`);
 });
+setupSocket(httpServer);
+});
+
