@@ -5,6 +5,7 @@ import { FaPlus } from "react-icons/fa";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+import { loginSucces } from "../../slices/AuthSlice.js";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter,      AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { logout } from "../../slices/AuthSlice.js";
 
@@ -88,7 +89,9 @@ const Profile = () => {
       });
       console.log(result);
       const {msg} = result.data;
+      // const { user } = result.data;
       toast.success(msg);
+      // dispatch(loginSucces(user));
       setLoading(false);
       setTimeout(()=>{
         navigate('/chat');
