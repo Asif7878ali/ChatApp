@@ -35,7 +35,7 @@ const ChatHeader = () => {
               alt="User Profile"
               className="w-12 h-12 rounded-full"
             />
-            <h2>{chatUserinfo?.username}</h2>
+            <h2>{chatUserinfo?.firstname} <span>{chatUserinfo?.lastname}</span></h2>
           </div>
         )}
       </div>

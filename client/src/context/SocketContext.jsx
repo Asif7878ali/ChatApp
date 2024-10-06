@@ -1,7 +1,7 @@
 import {createContext, useContext , useEffect, useRef} from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import {io} from 'socket.io-client'
-import { addMessage, selectChatData, selectChatType } from '../slices/ChatSlice';
+import { addMessage, selectChatData, selectChatType } from '../slices/ChatSlice.js';
 
 
 const SocketContext = createContext(null);

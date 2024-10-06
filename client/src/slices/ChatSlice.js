@@ -5,8 +5,8 @@ const ChatSlice = createSlice({
     initialState:{
       chatUser: null,
       messages: [],
-      chatType: undefined,
-      chatData: undefined,
+      chatType: null,
+      chatData: null,
     },
     reducers:{
         selectUserForChat: (state, action) => {
@@ -28,8 +28,8 @@ const ChatSlice = createSlice({
             state.messages = [...state.messages, action.payload];
         },
         closeChat: (state) => {
-            state.chatType = undefined;
-            state.chatData = undefined;
+            state.chatType = null;
+            state.chatData = null;
             state.messages = [];
         },
     }

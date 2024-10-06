@@ -1,31 +1,66 @@
-import { useEffect, useState } from 'react'
-import {useSocket} from '../../../../../../context/SocketContext.jsx';
+import { useEffect, useRef } from 'react'
+import { useSelector } from "react-redux";
+import moment from 'moment';
+
 
 const MessageDisplay = () => {
     
-  const [messages, setMessages] = useState([]);
-  const socket = useSocket();
-  console.log(messages);
+    const scrollref = useRef();
+    const chatMessages = useSelector((state) => state?.chat?.messages);
+    const chatData = useSelector((state) => state?.chat?.chatUser);
+
+   function renderMessage(){
+      let lastDate = null;
+      return chatMessages.map((message, index)=>{
+        let msgdate = moment(message.timestamp).format("YYYY-MM-DD");
+        let showdate = msgdate!= lastDate
+        lastDate = msgdate;
+        return (
+           <div key={index}>
+                {showdate && (
+                  <div className='text-center text-gray-500 my-2'>
+                    {moment(message.timestamp).format("LL")}
+                  </div>
+                )}
+                {renderDmMsg(message)}
+           </div>
+        )
+      });
+   }
+   function renderDmMsg(message) {
+    console.log(chatData);
+    return (
+      <div className={`${message.sender._id === chatData?._id ? 'text-left' : 'text-right'}`}>
+        {message.messageType === 'text' && (
+          <div
+            className={`${
+              message.sender._id !== chatData?._id
+                ? 'bg-[#04826b] text-white border-black'
+                : 'bg-[#51636d] text-white border-black'
+            } border inline-block p-2 rounded my-1 max-w-[50%] break-words`}
+          >
+            {message.content}
+          </div>
+        )}
+        <div className='text-sm text-gray-600'>
+          {moment(message.timestamp).format('LT')}
+        </div>
+      </div>
+    );
+  }
+  
 
   useEffect(() => {
-    // Server se message receive karte waqt ye event handle karega
-    socket.on("recieveMessaage", (message) => {
-      setMessages((prevMessages) => [...prevMessages, message]); // Messages list update kar rahe hain
-    });
-    // Cleanup function to remove listener on unmount componenet
-    return () => {
-      socket.off("recieveMessaage");
-    };
-  }, [socket]);
+    if(scrollref.current){
+      scrollref.current.scrollIntoView({behavior: 'smooth'});
+    }
+  }, [chatMessages]);
 
   return (
     <div className='flex-1 overflow-y-auto scrollbar-hidden p-4 px-8 w-full'>
-    {messages.map((msg, index) => (
-      <div key={index} className='my-2 p-2 border border-gray-300 rounded-lg'>
-        <strong>{msg.sender.firstname}: </strong> {msg.content}
-      </div>
-    ))}
-  </div>
+        {renderMessage()}
+        <div ref={scrollref}/>
+    </div>
   )
 }
 
