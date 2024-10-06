@@ -3,12 +3,17 @@ import { GrAttachment } from "react-icons/gr";
 import { MdOutlineEmojiEmotions } from "react-icons/md";
 import { IoSend } from "react-icons/io5";
 import EmojiPicker from 'emoji-picker-react';
+import {useSocket} from '../../../../../../context/SocketContext.jsx';
+import { useSelector } from "react-redux";
 
 
 const MessageBar = () => {
 
   const [emojiPicker, setEmojiPicker] = useState(false); 
   const [msg, setMsg] = useState('');
+  const recieverinfo = useSelector((state) => state?.chat?.chatUser);
+  const senderinfo = useSelector((state) => state?.auth?.user);
+  const socket = useSocket();
 
   const handleEmojiPick = () => {
     setEmojiPicker(prevState => !prevState);
@@ -16,6 +21,18 @@ const MessageBar = () => {
 
   const handleMsg = (event, emojiObject) => {
     setMsg(prevMsg => prevMsg + emojiObject.emoji);
+  };
+
+  const sendMessage = () => {
+    if (msg.trim()) {
+      socket.emit("sendMessage", {
+        sender: senderinfo._id, 
+        recipent: recieverinfo._id, 
+        messageType: 'text', 
+        content: msg, 
+      });
+      setMsg('');
+    }
   };
 
   return (
@@ -42,7 +59,7 @@ const MessageBar = () => {
           )}
         </div>
       </div>
-      <button>
+      <button onClick={sendMessage}>
         <IoSend />
       </button>
     </div>
