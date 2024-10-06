@@ -11,7 +11,7 @@ const MessageBar = () => {
 
   const [emojiPicker, setEmojiPicker] = useState(false); 
   const [msg, setMsg] = useState('');
-  const recieverinfo = useSelector((state) => state?.chat?.chatUser);
+  const recipientinfo = useSelector((state) => state?.chat?.chatUser);
   const senderinfo = useSelector((state) => state?.auth?.user);
   const socket = useSocket();
 
@@ -27,9 +27,10 @@ const MessageBar = () => {
     if (msg.trim()) {
       socket.emit("sendMessage", {
         sender: senderinfo._id, 
-        recipent: recieverinfo._id, 
+        recipient: recipientinfo._id, 
         messageType: 'text', 
         content: msg, 
+        fileurl : undefined
       });
       setMsg('');
     }

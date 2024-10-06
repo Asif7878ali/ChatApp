@@ -1,6 +1,10 @@
 require('dotenv').config();
 const { Server } = require('socket.io');
 const Messsage = require('./models/schemas/MessageSchema');
+//io is a circut of server io is refer to the entire circut
+// io is a big box socket get push into a circiut
+//socket is a particular client socket not entire circuit 
+// emit is a event & on is lister to listen to a event
 
 // Socket Setup function jo server par socket.io setup kar raha h
 const setupSocket = (serverindexjs) => {
@@ -41,11 +45,12 @@ const setupSocket = (serverindexjs) => {
       })
       //Messsage Event event jo frontend se message bhejne ke liye aata hai
       socket.on("sendMessage", async (message)=>{
+         console.log(message);
          // Sender ki socketID Map se le rahe hain
         const senderSocketID = userSocketMap.get(message.sender);
         console.log('senderSoc',senderSocketID);
         // Recipient ki socketID Map se le rahe hain
-        const recipientSocketID = userSocketMap.get(message.recipent);
+        const recipientSocketID = userSocketMap.get(message.recipient);
         console.log('recipentSoc',recipientSocketID);
         // Message ko MongoDB me save kar rahe hain
         const createdMessage = await Messsage.create(message);
@@ -53,14 +58,14 @@ const setupSocket = (serverindexjs) => {
          // Naya saved message ko populate kar rahe hain tak ki user ka detail mile
         const messageData = await Messsage.findById(createdMessage._id)
         .populate("sender", "id email firstname lastname image") // Sender ka full detail
-        .populate("recipent","id email firstname lastname image"); // Recipient ka full detail
+        .populate("recipient","id email firstname lastname image"); // Recipient ka full detail
         // message Reciever is online
         if(recipientSocketID){
-          io.to(recipientSocketID).emit("recieveMessaage", messageData);
+          io.to(recipientSocketID).emit("recieveMessage", messageData);
         }
         //send to the sender confirmation message
         if(senderSocketID){
-         io.to(senderSocketID).emit("recieveMessaage", messageData);
+         io.to(senderSocketID).emit("recieveMessage", messageData);
        }
       })
    })

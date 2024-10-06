@@ -1,6 +1,8 @@
 import {createContext, useContext , useEffect, useRef} from 'react';
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {io} from 'socket.io-client'
+import { addMessage, selectChatData, selectChatType } from '../slices/ChatSlice';
+
 
 const SocketContext = createContext(null);
 const server = import.meta.env.VITE_SERVER_URL;
@@ -11,6 +13,9 @@ export const useSocket = () =>{
 const SocketProvider = ({children}) =>{
      const socket = useRef();
      const userinfo = useSelector((state) => state?.auth?.user);
+     const chatType = useSelector(selectChatType);
+     const chatData = useSelector(selectChatData);
+     const dispatch = useDispatch();
      useEffect(()=>{
           if(userinfo){
             socket.current = io(server,{
@@ -21,10 +26,16 @@ const SocketProvider = ({children}) =>{
             socket.current.on("connect", () => {
                  console.log('Connected Socket Server');
             })
-            // //recieve message event 
-            // socket.current.on("recieveMessage", (message) => {
-
-            // })
+            //recieve message event 
+            socket.current.on("recieveMessage", (message) => {
+                console.log(message);
+              if(chatType !== undefined && (
+                chatData.payload.auth.user._id === message.sender._id || chatData.payload.auth.user._id === message.recipient._id
+              )){
+                console.log('Message Recieved:- ',message?.content);
+                   dispatch(addMessage(message));
+              }
+            })
             return () => {
                 //disconnecion event
                 socket.current.disconnect();
