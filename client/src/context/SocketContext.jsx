@@ -29,7 +29,8 @@ const SocketProvider = ({children}) =>{
             //recieve message event 
             socket.current.on("recieveMessage", (message) => {
                 console.log(message);
-              if(chatType !== undefined && (
+                console.log(chatType);
+              if(chatType !== null && (
                 chatData.payload.auth.user._id === message.sender._id || chatData.payload.auth.user._id === message.recipient._id
               )){
                 console.log('Message Recieved:- ',message?.content);

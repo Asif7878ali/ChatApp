@@ -21,4 +21,15 @@ const serachContacts = async (req, res) =>{
    }
 }
 
-module.exports = { serachContacts };
+const getContactsDmMessage = async (req, res) =>{
+   
+  try {
+     
+
+  } catch (error) {
+     console.error('Error searching contacts:', error);
+     return res.status(500).json({ msg: 'Server error', status: false });
+  }
+}
+
+module.exports = { serachContacts, getContactsDmMessage };

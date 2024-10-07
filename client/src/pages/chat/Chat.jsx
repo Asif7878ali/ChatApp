@@ -48,9 +48,7 @@ const Chat = () => {
           <EmptyChatContainer />
        ) : (
           <ChatContainer />
-       ) }
-     
-    
+       ) }    
     </div>
   );
 };
