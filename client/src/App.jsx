@@ -3,6 +3,7 @@ import Auth from './pages/auth/Auth.jsx';
 import Chat from './pages/chat/Chat.jsx';
 import Profile from './pages/profile/Profile.jsx';
 import { useSelector } from 'react-redux';
+import LandingPage from './pages/home/LandingPage.jsx';
 
 const App = () => {
      
@@ -31,6 +32,13 @@ const App = () => {
   return (
    <HashRouter>
    <Routes>
+   <Route 
+        path='/' 
+        element={
+             <AuthRoute>
+                <LandingPage/>
+             </AuthRoute>             
+         }/>
      <Route 
         path='/auth' 
         element={
