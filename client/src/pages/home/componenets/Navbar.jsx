@@ -1,9 +1,10 @@
 import React from 'react'
 import Logo from '../../../assets/chatwave.png'
+import {Link} from 'react-router-dom'
 
 const Navbar = () => {
   return (
-    <nav className="bg-[#f2f3ef] py-3 px-8 flex justify-between items-center">
+    <nav className="bg-white py-3 px-8 flex justify-between items-center">
     {/* Left side - Logo and links */}
     <div className="flex items-center space-x-6">
       {/* WhatsApp Logo */}
@@ -22,7 +23,10 @@ const Navbar = () => {
 
     {/* Right side - Log In and Download buttons */}
     <div className="flex items-center space-x-4">
-      <button className="text-sm font-medium text-gray-700 border border-gray-400 py-3 px-4 rounded-full hover:bg-gray-200">Log In</button>
+        <Link to='/auth'>
+        <button className="text-sm font-medium text-gray-700 border border-gray-400 py-3 px-4 rounded-full hover:bg-gray-200">Log In</button>
+        </Link>
+     
       <button className="text-sm font-medium text-white bg-[#25d366] py-3 px-4 rounded-full hover:bg-[#20b85c]">Download </button>
     </div>
   </nav>

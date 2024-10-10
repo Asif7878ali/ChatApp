@@ -4,19 +4,22 @@ import { FaFacebookF } from "react-icons/fa";
 import { FaInstagram } from "react-icons/fa";
 import { FaYoutube } from "react-icons/fa";
 import { FaSquareXTwitter } from "react-icons/fa6";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
-    <footer className="bg-[#f2f3ef] py-8 px-8">
+    <footer className="bg-white py-8 px-8">
       <div className="container mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
           <div className="col-span-1">
             <div className="mb-4">
-              <img src={Logo} alt="WhatsApp Logo" className="h-10" />
+              <img src={Logo} alt="WhatsApp Logo" className="h-20" />
             </div>
-            <button className="bg-[#25d366] text-white font-medium py-2 px-6 rounded-full hover:bg-[#20b85c]">
-              Download
-            </button>
+            <Link to="/auth">
+              <button className="bg-[#25d366] text-white font-medium py-2 px-6 rounded-full hover:bg-[#20b85c] mt-5">
+                Chat Now
+              </button>
+            </Link>
           </div>
 
           <div className="col-span-1">
