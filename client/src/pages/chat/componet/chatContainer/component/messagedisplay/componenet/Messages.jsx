@@ -5,7 +5,7 @@ import moment from "moment";
 const Messages = ({ data }) => {
   const chatData = useSelector((state) => state?.chat?.chatUser);
   const { sender, recipient, messageType, content, timeStamp } = data;
-  console.log(content);
+ 
   return (
     <div>
       <div

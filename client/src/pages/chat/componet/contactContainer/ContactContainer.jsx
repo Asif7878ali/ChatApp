@@ -12,7 +12,7 @@ const ContactContainer = () => {
   async function getContactList() {
     const server = import.meta.env.VITE_SERVER_URL;
     const url = `${server}/api/auth/get/contact/dm/messages`;
-
+   console.log('Sender id', senderId);
     try {
       const result = await axios.post(url, { senderId });
       console.log('Fetched Contacts:', result.data.contacts);
@@ -22,10 +22,13 @@ const ContactContainer = () => {
     }
   }
 
-  // Fetch contacts on component mount
-  // useEffect(() => {
-  //   getContactList();
-  // }, []);
+ // Fetch contacts on component mount
+  useEffect(() => {
+    if(senderId){
+      getContactList();
+    }
+   
+  }, [senderId]);
 
   return (
     <div className="relative md:w-[35vw] xl:w-[20vw] border-r border-gray-300 w-full h-screen">

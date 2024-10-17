@@ -64,9 +64,9 @@ const EmptyChatContainer = () => {
         <h1>Your messages</h1>
         <p className="pb-2 text-sm">Send a message to start a chat.</p>
          <Dialog open={openModal} onOpenChange={setOpenModal}>
-           <DialogTrigger>
+           <DialogTrigger asChild>
              <Button className="px-7 py-2 bg-blue-400 hover:bg-blue-500 text-white"
-                     type="submit" onClick={() => setOpenModal(true)}>
+                     type="button" onClick={() => setOpenModal(true)}>
               Send Message
              </Button>
            </DialogTrigger>
@@ -76,7 +76,7 @@ const EmptyChatContainer = () => {
               </DialogHeader>
              <span className="border-b border-gray-600"></span>
              <DialogDescription className="flex items-center space-x-4">
-                <p>To:</p>
+                <span>To:</span>
                 <input className="w-full focus:outline-none focus:border-transparent"
                        type="text" placeholder="Search..." value={search}
                         onChange={event =>{ 

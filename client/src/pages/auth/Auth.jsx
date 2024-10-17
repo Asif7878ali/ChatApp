@@ -116,7 +116,7 @@ const Auth = () => {
           email: email,
           password: password
        }
-         console.log(formdata);  
+        
          setLoading(true);
          //api call
          try {
@@ -148,7 +148,7 @@ const Auth = () => {
                <div className='flex items-center justify-center'>
                 <h1 className='text-5xl font-bold md:text-6xl'>Welcome</h1>
                </div>
-               <p className='font-medium text-center'>fill the details to get started with the Chat-App</p>
+               <p className='font-medium text-center'>fill the details to get started with the ChatWave</p>
             </div>
             <div className='flex items-center justify-center w-full'>
               <Tabs className='w-3/4' defaultValue='login'>
@@ -162,7 +162,7 @@ const Auth = () => {
                   <Input placeholder='Enter E-mail' type='email' value={email} onChange={(event) => setEmail(event.target.value)} className='rounded-full p-6' autoComplete=''/>
                   {/* Password */}
                   <Input placeholder='*******' type='password' value={password}onChange={(event) => setPassword(event.target.value)}  className='rounded-full p-6' autoComplete=''/>
-                  <Button className='rounded-full p-5 bg-black text-white font-bold hover:bg-slate-950' type='submit'>Login</Button>
+                  <Button className='rounded-full p-5 bg-[#25d366] text-white font-bold hover:bg-[#20b85c]' type='submit'>Login</Button>
                   </form>
                 </TabsContent>
                
@@ -178,7 +178,7 @@ const Auth = () => {
                          {/* Password */}
                     <Input placeholder='Password' type='password' value={password}onChange={(event) => setPassword(event.target.value)}
                       className='rounded-full p-6' autoComplete=''/>
-                    <Button className='rounded-full p-5 bg-blue-600 text-white font-bold hover:bg-blue-700' type='submit'>Signin</Button>
+                    <Button className='rounded-full p-5 bg-[#25d366] text-white font-bold hover:bg-[#20b85c]' type='submit'>Signin</Button>
                  </form>
                 </TabsContent>
               </Tabs>
