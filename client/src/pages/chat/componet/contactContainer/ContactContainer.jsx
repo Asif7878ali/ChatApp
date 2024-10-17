@@ -1,28 +1,71 @@
-import React from 'react';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 import ProfileDisplay from './componenet/profileDisplay/ProfileDisplay.jsx';
-
+import { useSelector } from 'react-redux';
 
 const ContactContainer = () => {
- 
+  const [contacts, setContacts] = useState([]); // State to store contacts
+  const userinfo = useSelector((state) => state?.auth?.user);
+  const senderId = userinfo?._id;
+
+  // Function to fetch contact list
+  async function getContactList() {
+    const server = import.meta.env.VITE_SERVER_URL;
+    const url = `${server}/api/auth/get/contact/dm/messages`;
+
+    try {
+      const result = await axios.post(url, { senderId });
+      console.log('Fetched Contacts:', result.data.contacts);
+      setContacts(result.data.contacts); // Update state with contacts
+    } catch (error) {
+      console.warn('Error fetching contacts:', error);
+    }
+  }
+
+  // Fetch contacts on component mount
+  // useEffect(() => {
+  //   getContactList();
+  // }, []);
+
   return (
     <div className="relative md:w-[35vw] xl:w-[20vw] border-r border-gray-300 w-full h-screen">
       <section className="left flex flex-col h-full">
-       <ProfileDisplay/>        
-        {/* Contact List Section */}
+        <ProfileDisplay />
+
         <div className="overflow-y-auto flex-grow">
-          <div className='py-4 flex items-center justify-center lg:text-2xl border-b-[1px] border-x-gray-100'>
+          <div className="py-4 flex items-center justify-center lg:text-2xl border-b-[1px] border-x-gray-100">
             <h3>Messages</h3>
           </div>
-           <div className="contact-item flex items-center justify-between p-4 cursor-pointer border-b-[1px]">
-              <div className="flex items-center space-x-4">
-                <img src="https://images.unsplash.com/photo-1620000617482-821324eb9a14?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" 
-                     alt="profile-image"
-                     className="w-10 h-10 rounded-full"/>
-                <div>
-                  <p className="font-bold">Diana</p>
+
+          {/* Conditional Rendering of Contacts */}
+          {contacts.length > 0 ? (
+            contacts.map((contact) => (
+              <div
+                key={contact._id}
+                className="contact-item flex items-center justify-between p-4 cursor-pointer border-b-[1px]"
+              >
+                <div className="flex items-center space-x-4">
+                  <img
+                    src={contact.image || 'https://via.placeholder.com/40'}
+                    alt="profile"
+                    className="w-10 h-10 rounded-full"
+                  />
+                  <div>
+                    <p className="font-bold">
+                      {contact.firstname} {contact.lastname}
+                    </p>
+                    <p className="text-sm text-gray-500">
+                      {new Date(contact.lastMessageTime).toLocaleString()}
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>                     
+            ))
+          ) : (
+            <div className="text-center p-4">
+              <h1>No Contact List</h1>
+            </div>
+          )}
         </div>
       </section>
     </div>
