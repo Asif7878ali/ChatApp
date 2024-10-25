@@ -1,6 +1,7 @@
 const Message = require('../models/schemas/MessageSchema.js');
 
 const getMessages = async (req ,res) =>{
+    console.log('Get Messages API Hit');
     console.log(req.body);
     const { senderId, recipientId } = req.body;
    try {

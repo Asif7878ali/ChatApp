@@ -19,11 +19,13 @@ const userSchema = new mongoose.Schema({
     },
     email :  {
       type : String,
+      unique: true,
       required : [true ,'E-mail is Required']
     },
     password :  {
       type : String,
-      required : [true ,'Password is Required']
+      required : [true ,'Password is Required'],
+      select: false
     },
     profileSetup :{
         type : Boolean,

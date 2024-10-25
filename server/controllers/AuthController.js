@@ -4,6 +4,7 @@ const JWT = require('jsonwebtoken')
 
 
 const signup = async (req,res) => {
+  console.log('Signin API Hit');
   try {
     const { email, firstname, lastname, password } = req.body;
     // findone method me first paramemter database wali entry hogi second wali req se aaye body hogi
@@ -29,6 +30,7 @@ const signup = async (req,res) => {
 
 
 const login = async (req,res) => {
+  console.log('Login API Hit');
   try {
     const { email, password } = req.body;
     const user = await User.findOne({ email }).exec();
@@ -55,6 +57,7 @@ const login = async (req,res) => {
 }
 
 const getuserinfo = async (req,res) => {
+  console.log('User Verify get back USerinfo API Hit');
   try {
         const userdatabaseid = req.id
         console.log(userdatabaseid);
@@ -80,6 +83,7 @@ const getuserinfo = async (req,res) => {
 }
 
 const profileSetup = async (req,res) => {
+  console.log('User Complete their Profile API Hit');
   try {
         const userdatabaseid = req.id
         const { username } = req.body;
@@ -102,6 +106,7 @@ const profileSetup = async (req,res) => {
 }
 
 const logout = async (req, res) =>{
+  console.log('Logout API Hit');
       try {
           console.log('logout...');
           res.clearCookie('token', { httpOnly: true, secure: true, sameSite: 'Strict' });
